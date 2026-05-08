@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Rauhoita hermostosi on interaktiivinen NFC-kirja hermoston kuormituksen tunnistamiseen ja rauhoittamiseen."
+    />
+    <title>Rauhoita hermostosi</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-1" aria-hidden="true"></div>
+    <div class="ambient ambient-2" aria-hidden="true"></div>
+    <div class="root-vein root-vein-left" aria-hidden="true"></div>
+    <div class="root-vein root-vein-right" aria-hidden="true"></div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="ghost-button" id="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-panel">
+          Sisältö
+        </button>
+        <div class="topbar-title">
+          <span class="eyebrow">Interaktiivinen NFC-kirja</span>
+          <strong id="book-title">Rauhoita hermostosi</strong>
+        </div>
+        <button class="ghost-button" id="reset-progress" type="button">
+          Nollaa
+        </button>
+      </header>
+
+      <aside class="toc-panel" id="toc-panel" aria-label="Sisällysluettelo">
+        <div class="toc-panel-inner">
+          <div class="toc-header">
+            <p class="eyebrow">Kartta</p>
+            <h2>Sisältö</h2>
+          </div>
+          <nav id="toc-list" class="toc-list"></nav>
+        </div>
+      </aside>
+
+      <main class="viewport">
+        <section class="hero-screen" id="start-screen">
+          <div class="hero-grid">
+            <div class="hero-copy plate">
+              <p class="eyebrow">Aukeaa NFC-tägistä</p>
+              <h1>Rauhoita hermostosi</h1>
+              <p class="hero-lead">
+                Hiljainen digitaalinen kirja kehon kuormituksen tunnistamiseen,
+                etenemiseen omaan tahtiin ja omien havaintojen tallettamiseen.
+              </p>
+              <div class="hero-actions">
+                <button class="primary-button" id="start-reading" type="button">
+                  Aloita lukeminen
+                </button>
+                <button class="ghost-button" id="open-map" type="button">
+                  Avaa kartta
+                </button>
+              </div>
+            </div>
+
+            <div class="hero-artifact-shell" aria-hidden="true">
+              <div class="artifact-frame">
+                <div class="artifact-root artifact-root-left"></div>
+                <div class="artifact-root artifact-root-right"></div>
+                <div class="artifact-halo"></div>
+                <img class="artifact-image" src="assets/images/hermosto-orbi.png" alt="" />
+                <div class="artifact-vignette"></div>
+              </div>
+            </div>
+
+            <div class="hero-panel plate">
+              <p class="panel-label">Lukureitti</p>
+              <div class="route-list" id="route-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="reader-screen hidden" id="reader-screen">
+          <div class="reader-layout">
+            <div class="reader-head">
+              <div>
+                <p class="eyebrow" id="part-label">Johdanto</p>
+                <h1 id="chapter-title">Ladataan…</h1>
+              </div>
+              <div class="progress-cluster signal-cluster">
+                <div class="progress-meta">
+                  <span id="progress-text">0 / 0</span>
+                  <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-bar" id="progress-bar"></div>
+                </div>
+              </div>
+            </div>
+
+            <article class="reader-card plate">
+              <div class="reader-orb-glow" aria-hidden="true"></div>
+
+              <div class="video-slot plate-inset" id="video-slot">
+                <p class="panel-label">Huoneen siirtymä</p>
+                <strong id="video-slot-title">Videopaikka tälle pääosalle</strong>
+                <span id="video-slot-copy">
+                  Voit lisätä myöhemmin lyhyen tunnelmallisen videon tämän osan alkuun.
+                </span>
+              </div>
+
+              <div class="reader-body prose" id="reader-body"></div>
+
+              <section class="observation-card plate-inset hidden" id="observation-card">
+                <div class="observation-header">
+                  <p class="eyebrow">Oma havainto</p>
+                  <h2 id="observation-title">Kirjaa mukaan yksi havainto</h2>
+                </div>
+                <p id="observation-copy">
+                  Tallenna yksi lause tästä osasta. Se näkyy lopun yhteenvedossa.
+                </p>
+                <label class="sr-only" for="observation-input">Oma havainto</label>
+                <textarea
+                  id="observation-input"
+                  rows="5"
+                  placeholder="Kirjoita tähän oma havaintosi…"
+                ></textarea>
+                <div class="observation-actions">
+                  <button class="primary-button" id="save-observation" type="button">
+                    Tallenna havainto
+                  </button>
+                  <span id="save-feedback" aria-live="polite"></span>
+                </div>
+              </section>
+
+              <section class="summary-card plate-inset hidden" id="summary-card">
+                <div class="observation-header">
+                  <p class="eyebrow">Lopun hermostokartta</p>
+                  <h2>Yhteenveto tallennetuista havainnoista</h2>
+                </div>
+                <div id="summary-list" class="summary-list"></div>
+              </section>
+            </article>
+
+            <footer class="reader-footer plate">
+              <button class="ghost-button" id="prev-chapter" type="button">
+                Edellinen
+              </button>
+              <button class="primary-button" id="mark-complete" type="button">
+                Merkitse luetuksi
+              </button>
+              <button class="ghost-button" id="next-chapter" type="button">
+                Seuraava
+              </button>
+            </footer>
+          </div>
+        </section>
+
+        <section class="error-screen hidden" id="error-screen">
+          <div class="reader-card plate">
+            <p class="eyebrow">Latausvirhe</p>
+            <h1>Manuskriptia ei voitu avata</h1>
+            <p id="error-copy">
+              Tarkista, että sivu avataan staattisen palvelimen kautta ja että
+              `content/rauhoita-hermostosi.md` on saatavilla.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="disclaimer plate">
+        Tämä sivu on tarkoitettu hermoston rauhoittamiseen. Se ei ole hoitoa
+        eikä korvaa terveydenhuollon tukea. Jos olosi on pitkään hyvin
+        kuormittunut, hae apua myös oikeilta ihmisiltä.
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
