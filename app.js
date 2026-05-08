@@ -1,6 +1,17 @@
 (function () {
   const MANUSCRIPT_PATH = "content/rauhoita-hermostosi.md";
   const STORAGE_KEY = "rauhoita-hermostosi-progress";
+  const VIDEO_SOUND_KEY = "rauhoita-hermostosi-video-sound";
+  const VIDEO_SOUND_LEVEL = 0.25;
+  const SECTION_VIDEOS = {
+    "Johdanto": "assets/video/johdanto.mp4",
+    "OSA 1": "assets/video/osa-1.mp4",
+    "OSA 2": "assets/video/osa-2.mp4",
+    "OSA 3": "assets/video/osa-3.mp4",
+    "OSA 4": "assets/video/osa-4.mp4",
+    "OSA 5": "assets/video/osa-5.mp4",
+    "Päätös": "assets/video/paatos.mp4"
+  };
   const OBSERVATION_PROMPTS = {
     "Johdanto": "Mikä tapa käyttää tätä kirjaa tuntuu kehollesi mahdolliselta juuri nyt?",
     "OSA 1": "Mikä tässä osassa tuntui tunnistettavalta omassa kehossasi?",
@@ -16,11 +27,15 @@
     flatChapters: [],
     currentIndex: 0,
     progress: loadProgress(),
-    isTurning: false
+    videoSoundEnabled: loadVideoSoundPreference(),
+    isTurning: false,
+    videoAvailability: {},
+    videoRequestToken: 0
   };
 
   const elements = {
     bookTitle: document.getElementById("book-title"),
+    routeLabel: document.querySelector(".hero-panel .panel-label"),
     routeList: document.getElementById("route-list"),
     startScreen: document.getElementById("start-screen"),
     readerScreen: document.getElementById("reader-screen"),
@@ -48,7 +63,10 @@
     saveObservation: document.getElementById("save-observation"),
     saveFeedback: document.getElementById("save-feedback"),
     summaryCard: document.getElementById("summary-card"),
+    summaryEyebrow: document.querySelector("#summary-card .eyebrow"),
+    summaryHeading: document.querySelector("#summary-card h2"),
     summaryList: document.getElementById("summary-list"),
+    readerFooter: document.querySelector(".reader-footer"),
     prevChapter: document.getElementById("prev-chapter"),
     nextChapter: document.getElementById("next-chapter"),
     markComplete: document.getElementById("mark-complete"),
@@ -87,7 +105,7 @@
     elements.openMap.addEventListener("click", toggleToc);
     elements.tocToggle.addEventListener("click", toggleToc);
     elements.prevChapter.addEventListener("click", () => navigate(-1, elements.prevChapter));
-    elements.nextChapter.addEventListener("click", () => navigate(1, elements.nextChapter));
+    elements.nextChapter.addEventListener("click", () => handleNextAction(elements.nextChapter));
     elements.markComplete.addEventListener("click", () => markCurrentComplete(elements.markComplete));
     elements.saveObservation.addEventListener("click", saveObservation);
     elements.resetProgress.addEventListener("click", resetProgress);
@@ -106,6 +124,15 @@
 
   function renderShell() {
     elements.bookTitle.textContent = state.book.title;
+    if (elements.routeLabel) {
+      elements.routeLabel.textContent = "Sisäinen kartta";
+    }
+    if (elements.summaryEyebrow) {
+      elements.summaryEyebrow.textContent = "Opuksen jäljet";
+    }
+    if (elements.summaryHeading) {
+      elements.summaryHeading.textContent = "Matkan aikana merkityt havainnot";
+    }
     renderRouteList();
     renderToc();
   }
@@ -154,6 +181,9 @@
     if (!chapter) {
       return;
     }
+    const summaryChapter = isSummaryChapter(chapter);
+    const closingChapter = isClosingChapter(chapter);
+    const finalChapter = state.currentIndex === state.flatChapters.length - 1;
 
     elements.partLabel.textContent = chapter.partTitle;
     elements.chapterTitle.textContent = chapter.title;
@@ -167,8 +197,9 @@
     elements.progressBar.style.width = `${progressPct}%`;
 
     const firstInPart = isFirstChapterInPart(chapter);
-    elements.videoSlot.classList.toggle("hidden", !firstInPart);
-    if (firstInPart) {
+    renderSectionVideo(chapter, firstInPart);
+    elements.videoSlot.classList.toggle("hidden", !elements.videoSlot.querySelector("video"));
+    if (firstInPart && !elements.videoSlot.classList.contains("hidden") && !elements.videoSlot.querySelector("video")) {
       elements.videoSlotTitle.textContent = chapter.partTitle;
       elements.videoSlotCopy.textContent =
         chapter.partTitle === "Päätös"
@@ -177,8 +208,9 @@
     }
 
     const lastInPart = isLastChapterInPart(chapter);
-    elements.observationCard.classList.toggle("hidden", !lastInPart);
-    if (lastInPart) {
+    const showObservation = lastInPart && !closingChapter;
+    elements.observationCard.classList.toggle("hidden", !showObservation);
+    if (showObservation) {
       const prompt = OBSERVATION_PROMPTS[chapter.partTitle] || OBSERVATION_PROMPTS["OSA 5"];
       elements.observationTitle.textContent = `${chapter.partTitle} – oma havainto`;
       elements.observationCopy.textContent = prompt;
@@ -186,17 +218,19 @@
       elements.saveFeedback.textContent = "";
     }
 
-    const isFinalPart = chapter.partTitle === "Päätös";
-    elements.summaryCard.classList.toggle("hidden", !isFinalPart);
-    if (isFinalPart) {
+    elements.summaryCard.classList.toggle("hidden", !summaryChapter);
+    if (summaryChapter) {
       renderSummary();
     }
 
     elements.prevChapter.disabled = state.currentIndex === 0;
-    elements.nextChapter.disabled = state.currentIndex === state.flatChapters.length - 1;
+    elements.nextChapter.disabled = false;
+    elements.nextChapter.textContent = closingChapter && finalChapter ? "Palaa alkuun" : "Seuraava";
+    elements.markComplete.classList.toggle("hidden", closingChapter);
+    elements.readerFooter.classList.toggle("is-final-close", closingChapter);
     elements.markComplete.textContent = state.progress.completed[chapter.slug]
-      ? "Luettu"
-      : "Merkitse luetuksi";
+      ? "Kuljettu"
+      : "Merkitse kuljetuksi";
 
     updateTocState();
   }
@@ -219,6 +253,102 @@
       item.innerHTML = `<h3>${escapeHtml(part)}</h3><p>${escapeHtml(value)}</p>`;
       elements.summaryList.appendChild(item);
     });
+  }
+
+  function renderSectionVideo(chapter, firstInPart) {
+    const videoPath = SECTION_VIDEOS[chapter.partTitle];
+    const shouldTryVideo = firstInPart && Boolean(videoPath);
+    const requestToken = ++state.videoRequestToken;
+
+    resetSectionVideo();
+
+    if (!shouldTryVideo) {
+      return;
+    }
+
+    if (state.videoAvailability[videoPath] === false) {
+      return;
+    }
+
+    elements.videoSlot.classList.remove("hidden");
+    elements.videoSlot.classList.add("is-loading");
+    elements.videoSlot.dataset.videoState = "loading";
+    elements.videoSlotTitle.textContent = chapter.partTitle;
+    elements.videoSlotCopy.textContent = "Lyhyt siirtymä avautuu vain tämän pääosan alussa.";
+
+    const video = document.createElement("video");
+    video.className = "threshold-video";
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.preload = "metadata";
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("loop", "");
+    video.setAttribute("tabindex", "-1");
+    video.setAttribute("aria-hidden", "true");
+    video.src = videoPath;
+
+    const soundControl = document.createElement("button");
+    soundControl.type = "button";
+    soundControl.className = "threshold-sound-toggle";
+    soundControl.textContent = "Äänet päälle";
+    soundControl.setAttribute("aria-pressed", "false");
+    soundControl.addEventListener("click", () => {
+      toggleThresholdVideoSound(video, soundControl);
+    });
+
+    video.addEventListener("loadeddata", () => {
+      if (requestToken !== state.videoRequestToken) {
+        video.pause();
+        return;
+      }
+      state.videoAvailability[videoPath] = true;
+      elements.videoSlot.classList.remove("is-loading");
+      elements.videoSlot.dataset.videoState = "ready";
+      applyMutedAutoplay(video);
+      syncThresholdSoundControl(video, soundControl);
+      if (state.videoSoundEnabled) {
+        syncThresholdVideoSound(video, true).then((enabled) => {
+          state.videoSoundEnabled = enabled;
+          persistVideoSoundPreference(enabled);
+          syncThresholdSoundControl(video, soundControl);
+        });
+      }
+    }, { once: true });
+
+    video.addEventListener("error", () => {
+      if (requestToken !== state.videoRequestToken) {
+        return;
+      }
+      state.videoAvailability[videoPath] = false;
+      resetSectionVideo();
+    }, { once: true });
+
+    elements.videoSlot.appendChild(video);
+    elements.videoSlot.appendChild(soundControl);
+  }
+
+  function resetSectionVideo() {
+    const existingVideo = elements.videoSlot.querySelector("video");
+    if (existingVideo) {
+      existingVideo.pause();
+      existingVideo.removeAttribute("src");
+      existingVideo.load();
+      existingVideo.remove();
+    }
+    const existingSoundControl = elements.videoSlot.querySelector(".threshold-sound-toggle");
+    if (existingSoundControl) {
+      existingSoundControl.remove();
+    }
+    elements.videoSlot.dataset.videoState = "idle";
+    elements.videoSlot.classList.remove("is-loading");
+    elements.videoSlot.classList.add("hidden");
+    elements.videoSlotTitle.textContent = "";
+    elements.videoSlotCopy.textContent = "";
   }
 
   function goToChapter(index, triggerElement, options = {}) {
@@ -258,11 +388,34 @@
     }
   }
 
+  function handleNextAction(triggerElement) {
+    const chapter = state.flatChapters[state.currentIndex];
+    if (isClosingChapter(chapter) && state.currentIndex === state.flatChapters.length - 1) {
+      returnToStart(triggerElement);
+      return;
+    }
+    navigate(1, triggerElement);
+  }
+
   function navigate(step, triggerElement) {
     if (state.isTurning) {
       return;
     }
     goToChapter(state.currentIndex + step, triggerElement);
+  }
+
+  function returnToStart(triggerElement) {
+    pulseControl(triggerElement);
+    if (window.history && typeof window.history.replaceState === "function") {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    } else {
+      window.location.hash = "";
+    }
+    closeToc();
+    elements.readerScreen.classList.add("hidden");
+    elements.errorScreen.classList.add("hidden");
+    elements.startScreen.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }
 
   function markCurrentComplete(triggerElement) {
@@ -283,7 +436,7 @@
     state.progress.observations[chapter.partTitle] = elements.observationInput.value;
     persistProgress();
     elements.saveFeedback.textContent = "Havainto tallennettu tähän laitteeseen.";
-    if (chapter.partTitle === "Päätös") {
+    if (isSummaryChapter(chapter)) {
       renderSummary();
     }
   }
@@ -370,6 +523,14 @@
     return Boolean(part && part.chapters[part.chapters.length - 1] && part.chapters[part.chapters.length - 1].slug === chapter.slug);
   }
 
+  function isSummaryChapter(chapter) {
+    return Boolean(chapter && chapter.partTitle === "Päätös" && chapter.title === "Omat jäljet tästä opuksesta");
+  }
+
+  function isClosingChapter(chapter) {
+    return Boolean(chapter && chapter.partTitle === "Päätös" && chapter.title === "Sulje opus");
+  }
+
   function flattenChapters(book) {
     const result = [];
     book.parts.forEach((part) => {
@@ -433,17 +594,6 @@
     });
 
     flushChapter();
-
-    const finalPart = book.parts[book.parts.length - 1];
-    if (finalPart && finalPart.title === "Päätös" && finalPart.chapters.length === 0) {
-      finalPart.chapters.push({
-        partTitle: "Päätös",
-        title: "Päätös",
-        slug: slugify("Päätös"),
-        body: "Tämä osa toimii lopun yhteenvetosivuna tallennetuille havainnoille."
-      });
-    }
-
     return book;
   }
 
@@ -605,6 +755,79 @@
     } catch (error) {
       return { completed: {}, observations: {} };
     }
+  }
+
+  function loadVideoSoundPreference() {
+    try {
+      return localStorage.getItem(VIDEO_SOUND_KEY) === "on";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function persistVideoSoundPreference(enabled) {
+    try {
+      localStorage.setItem(VIDEO_SOUND_KEY, enabled ? "on" : "off");
+    } catch (error) {
+      return;
+    }
+  }
+
+  function applyMutedAutoplay(video) {
+    video.volume = VIDEO_SOUND_LEVEL;
+    video.muted = true;
+    video.defaultMuted = true;
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {});
+    }
+  }
+
+  function syncThresholdSoundControl(video, control) {
+    if (!video || !control) {
+      return;
+    }
+    const soundEnabled = !video.muted;
+    control.textContent = soundEnabled ? "Äänet pois" : "Äänet päälle";
+    control.setAttribute("aria-pressed", soundEnabled ? "true" : "false");
+  }
+
+  function syncThresholdVideoSound(video, shouldEnableSound) {
+    if (!video) {
+      return Promise.resolve(false);
+    }
+
+    if (!shouldEnableSound) {
+      video.volume = VIDEO_SOUND_LEVEL;
+      video.muted = true;
+      video.defaultMuted = true;
+      return Promise.resolve(true);
+    }
+
+    video.volume = VIDEO_SOUND_LEVEL;
+    video.muted = false;
+    video.defaultMuted = false;
+
+    const playPromise = video.play();
+    if (!playPromise || typeof playPromise.then !== "function") {
+      return Promise.resolve(true);
+    }
+
+    return playPromise.then(() => true).catch(() => {
+      video.volume = VIDEO_SOUND_LEVEL;
+      video.muted = true;
+      video.defaultMuted = true;
+      return false;
+    });
+  }
+
+  function toggleThresholdVideoSound(video, control) {
+    const shouldEnableSound = video.muted;
+    syncThresholdVideoSound(video, shouldEnableSound).then((enabled) => {
+      state.videoSoundEnabled = enabled ? shouldEnableSound : false;
+      persistVideoSoundPreference(state.videoSoundEnabled);
+      syncThresholdSoundControl(video, control);
+    });
   }
 
   function hydrateProgress() {

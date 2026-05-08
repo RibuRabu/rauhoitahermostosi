@@ -2,12 +2,71 @@
 
 ## Johdanto
 
-### Miten tätä kurssia käytetään
+### Miten tätä opusta käytetään
+
+Jos avasit tämän sattumalta tai uteliaisuudesta, riittää että olet tässä.
+
+Pieni pysähdys hermostolle.
+
+#### Ennen kuin luet pidemmälle
+
+Katso ympärillesi.
+
+Nimeä mielessäsi hitaasti kolme asiaa, jotka näet.
+
+Kuuntele kahta eri ääntä.
+
+Tunne yksi kohta kehossasi, joka koskettaa jotakin.
+
+Sinun ei tarvitse muuttaa mitään.
+
+Riittää, että huomaat.
+
+Tämä on luotu, jotta opit tunnistamaan, miksi kehosi voi olla ylivireä — ja miten se voi alkaa palata turvan suuntaan.
+
+Et ole rikki.
+
+Sinun ei tarvitse tulla joksikin toiseksi.
+
+Tämä riittää tältä erää.
+
+---
+
+#### Kenelle tämä on
+
+Tämä on sinulle, jos:
+
+- olet usein stressaantunut, levoton tai uupunut
+- kehosi ei rauhoitu, vaikka lomaa tai vapaa-aikaa olisi
+- tunnet olevasi koko ajan jonkinlaisessa valmiustilassa
+- olet kokeillut rentoutumista, mutta se ei ole auttanut
+
+Et tarvitse diagnoosia, kokemusta tai taustatietoa.
+
+Riittää, että sinulla on keho.
+
+#### Mitä tämä ei ole
+
+- Ei terapia
+- Ei mindfulness-harjoitus
+- Ei “ajattele positiivisesti” -opas
+- Ei henkinen tai uskonnollinen sisältö
+
+Tämä on käytännöllinen digitaalinen kirja hermoston toiminnan tunnistamisesta ja rauhoittamisen suunnasta.
+
+#### Mitä opit
+
+Tämän kirjan jälkeen:
+
+- ymmärrät paremmin, miksi kehosi käy ylikierroksilla
+- osaat tunnistaa ylivireyden aikaisemmin
+- tiedät, millaiset asiat voivat antaa keholle turvasignaaleja
+- lakkaat helpommin syyttämästä itseäsi olostasi
 
 
 ### Miten edetä omaan tahtiin
 
-Tässä materiaalissa ei ole pakollista järjestystä.
+Tässä opuksessa ei ole pakollista järjestystä.
 
 Voit:
 
@@ -48,9 +107,9 @@ Tahti on kehossa.
 
 
 
-### Mitä kurssi tekee ja mitä ei tee
+### Mitä tämä opus avaa ja mitä se ei tee
 
-###### Tämä kurssi tekee:
+###### Tämä opus auttaa sinua:
 
 - auttaa ymmärtämään, miksi keho käy ylikierroksilla
 - tukee ylivireyden tunnistamista ajoissa
@@ -62,7 +121,7 @@ Tämä on säätelyä, ei itsensä korjaamista.
 
 ---
 
-###### Tämä kurssi ei tee:
+###### Tämä opus ei tee:
 
 - ei diagnosoi mitään
 - ei korvaa hoitoa, terapiaa tai lääkärikäyntejä
@@ -78,7 +137,7 @@ Tämä ei ole suoritus.
 
 Tämä on paikka, johon keho saa laskeutua hetkeksi.
 
-Jos huomaat, että olosi on pitkään hyvin kuormittunut, ahdistunut tai hallitsematon, on tärkeää hakea myös ulkopuolista tukea terveydenhuollosta tai mielenterveyspalveluista. Tämä materiaali voi tukea, mutta sen ei ole tarkoitus jäädä ainoaksi tueksi.
+Jos huomaat, että olosi on pitkään hyvin kuormittunut, ahdistunut tai hallitsematon, on tärkeää hakea myös ulkopuolista tukea terveydenhuollosta tai mielenterveyspalveluista. Tämä opus voi tukea, mutta sen ei ole tarkoitus jäädä ainoaksi tueksi.
 
 
 ---
@@ -364,7 +423,7 @@ Tunnistanko tämän tilan, vai onko se minulle vieras?
 
 
 
-### Yhteenveto ja tehtäviä
+### Yhteenveto ja mukaan vietävää
 
 <aside>
 
@@ -2081,7 +2140,7 @@ Voit olla täysin tietoinen kuormituksesta – ja silti kantaa sitä kehossa.
 
 ###### Mitä tämä oikeasti on
 
-Kuormituksen purku tässä kurssissa on:
+Tässä opuksessa kuormituksen purku on:
 
 - **alhaalta ylöspäin** tapahtuvaa
 - kehollista
@@ -2750,4 +2809,42 @@ Oleellista ei ole muoto, vaan tämä:
 
 
 ## Päätös
+
+### Mukaan vietävä kartta
+
+Kaikkea ei tarvitse muistaa kerralla.
+
+Riittää, että jokin näistä jää mukaan arkeen:
+
+- huomaa tila aikaisemmin
+- nimeä kuorman lähde
+- etsi yksi turvasignaali
+- käytä kolmea näköhavaintoa, kahta ääntä ja yhtä kehon kosketuskohtaa
+- älä pakota rauhaa
+- pienennä tehtävää
+- palaa suuntaan, ei täydellisyyteen
+
+Jos mikään ei tunnu toimivan heti, sekään ei tarkoita, että keho olisi vastassa.
+
+Joskus suunta näkyy vasta siinä, että huomaat tilanteen hieman aiemmin kuin ennen.
+
+### Omat jäljet tästä opuksesta
+
+Tähän kohtaan jäävät ne havainnot, jotka merkitsit matkan aikana.
+
+Niiden ei tarvitse olla valmiita vastauksia.
+
+Ne ovat jälkiä siitä, missä kehosi tunnisti jotakin.
+
+### Sulje opus
+
+Voit sulkea tämän opuksen nyt.
+
+Sinun ei tarvitse muistaa kaikkea.
+
+Jos yksi asia jäi eloon, se riittää.
+
+Tieto ei jää vain mieleen.
+
+Se voi jäädä kehoon pienenä signaalina, joka palaa esiin oikealla hetkellä.
 
