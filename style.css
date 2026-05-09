@@ -1162,6 +1162,16 @@ textarea:focus {
   padding-top: 0.55rem;
 }
 
+.creator-feedback-copy {
+  margin-top: 1.6rem;
+}
+
+.creator-feedback-note {
+  color: var(--muted-strong);
+  font-size: 0.96rem;
+  line-height: 1.8;
+}
+
 .creator-email {
   color: #f0d8b3;
   text-decoration-color: rgba(240, 216, 179, 0.5);
