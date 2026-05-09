@@ -98,12 +98,10 @@
             <article class="reader-card plate">
               <div class="reader-orb-glow" aria-hidden="true"></div>
 
-              <div class="video-slot plate-inset" id="video-slot">
-                <p class="panel-label">Huoneen siirtymä</p>
-                <strong id="video-slot-title">Videopaikka tälle pääosalle</strong>
-                <span id="video-slot-copy">
-                  Voit lisätä myöhemmin lyhyen tunnelmallisen videon tämän osan alkuun.
-                </span>
+              <div class="video-slot plate-inset hidden" id="video-slot">
+                <p class="panel-label hidden" aria-hidden="true">Huoneen siirtymä</p>
+                <strong class="hidden" id="video-slot-title" aria-hidden="true"></strong>
+                <span class="hidden" id="video-slot-copy" aria-hidden="true"></span>
               </div>
 
               <div class="reader-body prose" id="reader-body"></div>
@@ -137,6 +135,12 @@
                 </div>
                 <div id="summary-list" class="summary-list"></div>
               </section>
+
+              <section class="creator-link-card hidden" id="creator-link-card">
+                <button class="quiet-link-button" id="open-creator-view" type="button">
+                  Haluatko samanlaisen toteutuksen?
+                </button>
+              </section>
             </article>
 
             <footer class="reader-footer plate">
@@ -161,6 +165,41 @@
               Tarkista, että sivu avataan staattisen palvelimen kautta ja että
               `content/rauhoita-hermostosi.md` on saatavilla.
             </p>
+          </div>
+        </section>
+
+        <section class="creator-screen hidden" id="creator-screen">
+          <div class="reader-layout">
+            <article class="reader-card plate creator-card">
+              <div class="observation-header">
+                <p class="eyebrow">Tekijästä</p>
+                <h1>Tekijästä</h1>
+              </div>
+              <div class="prose creator-copy">
+                <p>
+                  Tämä opus on Tulkintatilan rakentama digitaalinen artefakti:
+                  fyysisestä NFC-tägistä avautuva, selaimessa toimiva lukukokemus.
+                </p>
+                <p>
+                  Toteutus yhdistää käsikirjoituksen, käyttöliittymän,
+                  visuaalisen tunnelman ja kevyen interaktion yhdeksi digitaaliseksi
+                  opukseksi.
+                </p>
+                <p>
+                  Jos haluat vastaavan toteutuksen omalle sisällölle, tuotteelle,
+                  tapahtumalle tai asiakaspolulle, ota yhteyttä:
+                </p>
+                <p>
+                  <a class="creator-email" href="mailto:hello@tulkintatila.fi">hello@tulkintatila.fi</a>
+                </p>
+              </div>
+            </article>
+
+            <footer class="reader-footer plate creator-footer">
+              <button class="ghost-button" id="back-to-opus" type="button">
+                Palaa opukseen
+              </button>
+            </footer>
           </div>
         </section>
       </main>

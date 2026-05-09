@@ -729,6 +729,7 @@ textarea:focus-visible {
     inset 0 1px 0 rgba(255, 225, 188, 0.025),
     inset 0 0 0 1px rgba(95, 68, 42, 0.18),
     0 16px 34px rgba(0, 0, 0, 0.3);
+  justify-items: center;
 }
 
 .video-slot::before {
@@ -747,6 +748,12 @@ textarea:focus-visible {
 .video-slot span {
   position: relative;
   z-index: 2;
+}
+
+.video-slot .panel-label,
+.video-slot #video-slot-title,
+.video-slot #video-slot-copy {
+  display: none !important;
 }
 
 .video-slot strong {
@@ -1020,6 +1027,39 @@ textarea:focus-visible {
   margin-top: 1.25rem;
 }
 
+.creator-link-card {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.quiet-link-button {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted-strong);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-decoration: underline;
+  text-decoration-color: rgba(221, 195, 159, 0.42);
+  text-underline-offset: 0.22rem;
+  cursor: pointer;
+  transition: color 140ms ease, text-decoration-color 140ms ease, opacity 140ms ease;
+}
+
+.quiet-link-button:hover,
+.quiet-link-button:focus-visible {
+  color: #f0d8b3;
+  text-decoration-color: rgba(240, 216, 179, 0.78);
+}
+
+.quiet-link-button:focus-visible {
+  outline: 1px solid rgba(238, 182, 104, 0.72);
+  outline-offset: 4px;
+}
+
 .observation-header {
   margin-bottom: 0.75rem;
 }
@@ -1094,14 +1134,47 @@ textarea:focus {
 .reader-footer {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
-  padding: 0.9rem;
-  position: sticky;
-  bottom: 1rem;
+  gap: 0.55rem;
+  padding: 0.78rem;
+  margin-top: 1.5rem;
+  position: static;
 }
 
 .reader-footer.is-final-close {
   grid-template-columns: repeat(2, 1fr);
+}
+
+.reader-footer .ghost-button,
+.reader-footer .primary-button {
+  padding: 0.7rem 0.95rem;
+  border-radius: 18px;
+  font-size: 0.84rem;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+}
+
+.creator-card .observation-header {
+  margin-bottom: 0.25rem;
+}
+
+.creator-copy {
+  max-width: 42rem;
+  padding-top: 0.55rem;
+}
+
+.creator-email {
+  color: #f0d8b3;
+  text-decoration-color: rgba(240, 216, 179, 0.5);
+  text-underline-offset: 0.2rem;
+}
+
+.creator-email:hover,
+.creator-email:focus-visible {
+  text-decoration-color: rgba(240, 216, 179, 0.9);
+}
+
+.creator-footer {
+  grid-template-columns: 1fr;
 }
 
 .disclaimer {
@@ -1154,10 +1227,20 @@ textarea:focus {
 
   .reader-footer {
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 0.9rem;
   }
 
   .reader-footer.is-final-close {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reader-footer .ghost-button,
+  .reader-footer .primary-button {
+    padding: 0.86rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
   }
 
   .toc-panel {

@@ -39,6 +39,7 @@
     routeList: document.getElementById("route-list"),
     startScreen: document.getElementById("start-screen"),
     readerScreen: document.getElementById("reader-screen"),
+    creatorScreen: document.getElementById("creator-screen"),
     readerCard: document.querySelector(".reader-card"),
     errorScreen: document.getElementById("error-screen"),
     errorCopy: document.getElementById("error-copy"),
@@ -66,6 +67,9 @@
     summaryEyebrow: document.querySelector("#summary-card .eyebrow"),
     summaryHeading: document.querySelector("#summary-card h2"),
     summaryList: document.getElementById("summary-list"),
+    creatorLinkCard: document.getElementById("creator-link-card"),
+    openCreatorView: document.getElementById("open-creator-view"),
+    backToOpus: document.getElementById("back-to-opus"),
     readerFooter: document.querySelector(".reader-footer"),
     prevChapter: document.getElementById("prev-chapter"),
     nextChapter: document.getElementById("next-chapter"),
@@ -109,6 +113,8 @@
     elements.markComplete.addEventListener("click", () => markCurrentComplete(elements.markComplete));
     elements.saveObservation.addEventListener("click", saveObservation);
     elements.resetProgress.addEventListener("click", resetProgress);
+    elements.openCreatorView.addEventListener("click", openCreatorView);
+    elements.backToOpus.addEventListener("click", returnToOpus);
     window.addEventListener("hashchange", handleHashChange);
     document.addEventListener("click", (event) => {
       if (!elements.tocPanel.classList.contains("is-open")) {
@@ -198,15 +204,6 @@
 
     const firstInPart = isFirstChapterInPart(chapter);
     renderSectionVideo(chapter, firstInPart);
-    elements.videoSlot.classList.toggle("hidden", !elements.videoSlot.querySelector("video"));
-    if (firstInPart && !elements.videoSlot.classList.contains("hidden") && !elements.videoSlot.querySelector("video")) {
-      elements.videoSlotTitle.textContent = chapter.partTitle;
-      elements.videoSlotCopy.textContent =
-        chapter.partTitle === "Päätös"
-          ? "Voit lisätä myöhemmin lopun siirtymävideon tähän kohtaan."
-          : "Voit lisätä myöhemmin tämän pääosan alkuun lyhyen tunnelmallisen siirtymävideon.";
-    }
-
     const lastInPart = isLastChapterInPart(chapter);
     const showObservation = lastInPart && !closingChapter;
     elements.observationCard.classList.toggle("hidden", !showObservation);
@@ -222,6 +219,7 @@
     if (summaryChapter) {
       renderSummary();
     }
+    elements.creatorLinkCard.classList.toggle("hidden", !(closingChapter && finalChapter));
 
     elements.prevChapter.disabled = state.currentIndex === 0;
     elements.nextChapter.disabled = false;
@@ -273,8 +271,6 @@
     elements.videoSlot.classList.remove("hidden");
     elements.videoSlot.classList.add("is-loading");
     elements.videoSlot.dataset.videoState = "loading";
-    elements.videoSlotTitle.textContent = chapter.partTitle;
-    elements.videoSlotCopy.textContent = "Lyhyt siirtymä avautuu vain tämän pääosan alussa.";
 
     const video = document.createElement("video");
     video.className = "threshold-video";
@@ -413,8 +409,24 @@
     }
     closeToc();
     elements.readerScreen.classList.add("hidden");
+    elements.creatorScreen.classList.add("hidden");
     elements.errorScreen.classList.add("hidden");
     elements.startScreen.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  }
+
+  function openCreatorView() {
+    closeToc();
+    elements.startScreen.classList.add("hidden");
+    elements.errorScreen.classList.add("hidden");
+    elements.readerScreen.classList.add("hidden");
+    elements.creatorScreen.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  }
+
+  function returnToOpus() {
+    showReader();
+    renderCurrentChapter();
     window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }
 
@@ -475,12 +487,14 @@
   function showReader() {
     elements.startScreen.classList.add("hidden");
     elements.errorScreen.classList.add("hidden");
+    elements.creatorScreen.classList.add("hidden");
     elements.readerScreen.classList.remove("hidden");
   }
 
   function showError(error) {
     elements.startScreen.classList.add("hidden");
     elements.readerScreen.classList.add("hidden");
+    elements.creatorScreen.classList.add("hidden");
     elements.errorScreen.classList.remove("hidden");
     elements.errorCopy.textContent =
       "Tarkista, että sivu avataan staattisen palvelimen kautta ja että content/rauhoita-hermostosi.md löytyy. " +
