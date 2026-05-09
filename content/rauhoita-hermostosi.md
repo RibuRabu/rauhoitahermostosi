@@ -572,7 +572,7 @@ Tärkeä oivallus:
 
 
 
-### Jatkuva suorittaminen ja mikrotressi
+### Jatkuva suorittaminen ja mikrostressi
 
 ##### Kuormitus ei ole sama asia kuin stressi
 
